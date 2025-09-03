@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobLink AI - Real Job Matches</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .floating-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            opacity: 0.1;
+            color: #4b6cb7;
+            font-size: 24px;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: linear-gradient(45deg, #fff, #c3cfe2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 10px;
+            border-radius: 50%;
+        }
+        
+        .content {
+            padding: 35px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .welcome-screen, .field-screen, .question-screen, .results-screen {
+            text-align: center;
+        }
+        
+        .welcome-screen h2, .field-screen h2 {
+            color: #4b6cb7;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .welcome-screen p, .field-screen p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 150px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            color: #4b6cb7;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(75, 108, 183, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(75, 108, 183, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .field-screen {
+            display: none;
+        }
+        
+        .field-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .field-option {
+            background: #f0f4ff;
+            border: 2px solid #dbe1f0;
+            border-radius: 15px;
+            padding: 25px;
+            width: 200px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .field-option:hover {
+            background: #4b6cb7;
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(75, 108, 183, 0.2);
+        }
+        
+        .field-option i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #4b6cb7;
+        }
+        
+        .field-option:hover i {
+            color: white;
+        }
+        
+        .field-option p {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .question-screen {
+            display: none;
+            text-align: left;
+        }
+        
+        .question-screen h3 {
+            color: #4b6cb7;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            text-align: center;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .option-btn {
+            background: #f0f4ff;
+            color: #4b6cb7;
+            border: 2px solid #dbe1f0;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            font-weight: 500;
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: left;
+        }
+        
+        .option-btn:hover {
+            background: #4b6cb7;
+            color: white;
+            border-color: #4b6cb7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(75, 108, 183, 0.2);
+        }
+        
+        .option-btn i {
+            font-size: 1.2rem;
+        }
+        
+        .yes-no-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .yes-no-btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .yes-btn {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .yes-btn:hover {
+            background: #388e3c;
+            transform: translateY(-2px);
+        }
+        
+        .no-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .no-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+        
+        .skill-level {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .skill-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #e8f5e9;
+            border: 2px solid #c8e6c9;
+            color: #2e7d32;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-btn:hover {
+            background: #c8e6c9;
+            transform: translateY(-2px);
+        }
+        
+        .skill-btn.active {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .question-count {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .results-screen {
+            display: none;
+        }
+        
+        .results-screen h3 {
+            color: #4b6cb7;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .results-screen p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        .job-results {
+            text-align: left;
+            margin-top: 25px;
+        }
+        
+        .job-card {
+            background: #f9fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #4b6cb7;
+            transition: transform 0.3s ease;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .job-card h4 {
+            color: #182848;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .job-card p {
+            margin-bottom: 10px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .job-card i {
+            color: #4b6cb7;
+            width: 20px;
+        }
+        
+        .job-card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            color: #4b6cb7;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .job-card a:hover {
+            color: #182848;
+            gap: 12px;
+        }
+        
+        .contact-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .contact-info h5 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .contact-detail i {
+            color: #4caf50;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4b6cb7;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .user-profile {
+            background: linear-gradient(90deg, #f0f4ff 0%, #e8edff 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .user-profile h4 {
+            color: #182848;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .profile-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .profile-detail {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .profile-detail i {
+            color: #4b6cb7;
+        }
+        
+        .skill-suggestions {
+            background: linear-gradient(90deg, #fff6f0 0%, #fff0ed 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+            border-left: 5px solid #ff8a65;
+        }
+        
+        .skill-suggestions h4 {
+            color: #d84315;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .skill {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .skill i {
+            color: #ff8a65;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            background: #f9fafc;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            color: #4b6cb7;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #182848;
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .options {
+                flex-direction: column;
+            }
+            
+            .option-btn {
+                width: 100%;
+            }
+            
+            .feature {
+                width: 120px;
+                padding: 15px 10px;
+            }
+            
+            .feature i {
+                font-size: 1.7rem;
+            }
+            
+            .yes-no-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .yes-no-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .field-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .field-option {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 25px 20px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            
+            .feature {
+                width: 100px;
+            }
+            
+            .feature i {
+                font-size: 1.5rem;
+            }
+            
+            .feature p {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Animation for floating icons */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        /* Confetti effect */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f;
+            opacity: 0.7;
+            border-radius: 0;
+        }
+        
+        .question-note {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background: #f0f4ff;
+            color: #4b6cb7;
+            padding: 10px 20px;
+            border: 2px solid #dbe1f0;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #4b6cb7;
+            color: white;
+        }
+        
+        .salary-tag {
+            background: #4caf50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="floating-icons">
+            <div class="floating-icon" style="top: 10%; left: 5%; animation: float 8s infinite ease-in-out;"><i class="fas fa-briefcase"></i></div>
+            <div class="floating-icon" style="top: 20%; right: 7%; animation: float 10s infinite ease-in-out;"><i class="fas fa-search"></i></div>
+            <div class="floating-icon" style="top: 60%; left: 8%; animation: float 9s infinite ease-in-out;"><i class="fas fa-user-graduate"></i></div>
+            <div class="floating-icon" style="bottom: 20%; right: 10%; animation: float 11s infinite ease-in-out;"><i class="fas fa-lightbulb"></i></div>
+            <div class="floating-icon" style="top: 40%; right: 15%; animation: float 7s infinite ease-in-out;"><i class="fas fa-rocket"></i></div>
+        </div>
+        
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-link"></i>
+                </div>
+                <h1>JobLink AI</h1>
+                <p>Real Job Matches with Contact Information</p>
+            </div>
+        </header>
+        
+        <div class="content">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <h2>Find Your Perfect Job Match</h2>
+                <p>First, select your field of interest, then we'll ask detailed questions about your skills and experience to find the best job opportunities for you.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-industry"></i>
+                        <p>Field Selection</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-tasks"></i>
+                        <p>Skills Assessment</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Career Matching</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-handshake"></i>
+                        <p>Job Opportunities</p>
+                    </div>
+                </div>
+                
+                <button class="btn" id="startBtn">
+                    <i class="fas fa-play"></i> Begin Assessment
+                </button>
+            </div>
+            
+            <!-- Field Selection Screen -->
+            <div class="field-screen" id="fieldScreen">
+                <h2>Select Your Field of Interest</h2>
+                <p>Choose the field that best matches your skills, experience, or career interests. We'll tailor the assessment questions accordingly.</p>
+                
+                <div class="field-options">
+                    <div class="field-option" data-field="technology">
+                        <i class="fas fa-laptop-code"></i>
+                        <p>Technology & IT</p>
+                    </div>
+                    <div class="field-option" data-field="healthcare">
+                        <i class="fas fa-heartbeat"></i>
+                        <p>Healthcare</p>
+                    </div>
+                    <div class="field-option" data-field="education">
+                        <i class="fas fa-graduation-cap"></i>
+                        <p>Education</p>
+                    </div>
+                    <div class="field-option" data-field="business">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Business & Finance</p>
+                    </div>
+                    <div class="field-option" data-field="creative">
+                        <i class="fas fa-paint-brush"></i>
+                        <p>Creative Arts</p>
+                    </div>
+                    <div class="field-option" data-field="trades">
+                        <i class="fas fa-tools"></i>
+                        <p>Skilled Trades</p>
+                    </div>
+                    <div class="field-option" data-field="hospitality">
+                        <i class="fas fa-utensils"></i>
+                        <p>Hospitality</p>
+                    </div>
+                    <div class="field-option" data-field="other">
+                        <i class="fas fa-globe"></i>
+                        <p>Other Fields</p>
+                    </div>
+                </div>
+                
+                <button class="back-btn" id="backToWelcomeBtn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+            
+            <!-- Question Screen -->
+            <div class="question-screen" id="questionScreen">
+                <div class="question-count" id="questionCount">Question 1 of 10</div>
+                <h3 id="questionCategory">General Skills</h3>
+                <div class="question-text" id="questionText">Do you have experience working in teams?</div>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+                
+                <div id="optionsContainer">
+                    <!-- Options will be inserted here by JavaScript -->
+                </div>
+                
+                <button class="back-btn" id="backToFieldBtn">
+                    <i class="fas fa-arrow-left"></i> Change Field
+                </button>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Analyzing your skills and finding the best job matches...</p>
+            </div>
+            
+            <!-- Results Screen -->
+            <div class="results-screen" id="resultsScreen">
+                <h3>Job Matches for Your Skills</h3>
+                <p>Based on your detailed skills assessment, we've found these opportunities:</p>
+                
+                <div class="user-profile" id="userProfile">
+                    <!-- User profile summary will be inserted here -->
+                </div>
+                
+                <div class="job-results" id="jobResults">
+                    <!-- Job results will be inserted here by JavaScript -->
+                </div>
+                
+                <div class="skill-suggestions" id="skillSuggestions">
+                    <!-- Skill suggestions will be inserted here -->
+                </div>
+                
+                <button class="btn" id="restartBtn">
+                    <i class="fas fa-redo"></i> Start Again
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>JobLink AI Skills Assessment | IPMC AI Hackathon 2025</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Field definitions with specific questions for each field
+        const fields = {
+            technology: {
+                name: "Technology & IT",
+                icon: "fas fa-laptop-code",
+                questions: [
+                    {
+                        category: "Technical Skills",
+                        question: "Do you have programming experience?",
+                        type: "yesno",
+                        followUp: {
+                            yes: [
+                                {
+                                    question: "Which programming languages are you proficient in?",
+                                    type: "multi",
+                                    options: [
+                                        {text: "JavaScript", icon: "fab fa-js-square"},
+                                        {text: "Python", icon: "fab fa-python"},
+                                        {text: "Java", icon: "fab fa-java"},
+                                        {text: "C++", icon: "fas fa-code"},
+                                        {text: "PHP", icon: "fab fa-php"},
+                                        {text: "Other", icon: "fas fa-laptop-code"}
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        category: "Technical Skills",
+                        question: "Are you familiar with database management?",
+                        type: "yesno"
+                    },
+                    {
+                        category: "Technical Skills",
+                        question: "Do you have experience with web development?",
+                        type: "yesno"
+                    },
+                    {
+                        category: "Soft Skills",
+                        question: "How would you rate your problem-solving skills?",
+                        type: "skill",
+                        options: ["Beginner", "Intermediate", "Advanced", "Expert"]
+                    },
+                    {
+                        category: "Experience",
+                        question: "How many years of experience do you have in IT?",
+                        type: "single",
+                        options: [
+                            {text: "None", icon: "fas fa-baby"},
+                            {text: "1-2 years", icon: "fas fa-user"},
+                            {text: "3-5 years", icon: "fas fa-user-tie"},
+                            {text: "5+ years", icon: "fas fa-user-ninja"}
+                        ]
+                    }
+                ]
+            },
+            healthcare: {
+                name: "Healthcare",
+                icon: "fas fa-heartbeat",
+                questions: [
+                    {
+                        category: "Medical Skills",
+                        question: "Do you have any medical certifications?",
+                        type: "yesno",
+                        followUp: {
+                            yes: [
+                                {
+                                    question: "Which certifications do you hold?",
+                                    type: "multi",
+                                    options: [
+                                        {text: "First Aid", icon: "fas fa-first-aid"},
+                                        {text: "CPR", icon: "fas fa-heart"},
+                                        {text: "Nursing", icon: "fas fa-user-md"},
+                                        {text: "EMT", icon: "fas fa-ambulance"},
+                                        {text: "Other", icon: "fas fa-certificate"}
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        category: "Experience",
+                        question: "Do you have experience working with patients?",
+                        type: "yesno"
+                    },
+                    {
+                        category: "Soft Skills",
+                        question: "How would you rate your empathy and bedside manner?",
+                        type: "skill",
+                        options: ["Beginner", "Intermediate", "Advanced", "Expert"]
+                    }
+                ]
+            },
+            education: {
+                name: "Education",
+                icon: "fas fa-graduation-cap",
+                questions: [
+                    {
+                        category: "Teaching Skills",
+                        question: "Do you have teaching experience?",
+                        type: "yesno",
+                        followUp: {
+                            yes: [
+                                {
+                                    question: "What age groups have you taught?",
+                                    type: "multi",
+                                    options: [
+                                        {text: "Early Childhood", icon: "fas fa-baby"},
+                                        {text: "Elementary", icon: "fas fa-child"},
+                                        {text: "Secondary", icon: "fas fa-user-graduate"},
+                                        {text: "Adult", icon: "fas fa-user-tie"}
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        category: "Subject Knowledge",
+                        question: "Which subjects are you qualified to teach?",
+                        type: "multi",
+                        options: [
+                            {text: "Math", icon: "fas fa-calculator"},
+                            {text: "Science", icon: "fas fa-flask"},
+                            {text: "Language", icon: "fas fa-book"},
+                            {text: "History", icon: "fas fa-monument"},
+                            {text: "Arts", icon: "fas fa-paint-brush"}
+                        ]
+                    }
+                ]
+            },
+            business: {
+                name: "Business & Finance",
+                icon: "fas fa-chart-line",
+                questions: [
+                    {
+                        category: "Business Skills",
+                        question: "Do you have experience in management?",
+                        type: "yesno"
+                    },
+                    {
+                        category: "Financial Skills",
+                        question: "Are you proficient with financial software?",
+                        type: "yesno"
+                    },
+                    {
+                        category: "Analytical Skills",
+                        question: "How would you rate your data analysis skills?",
+                        type: "skill",
+                        options: ["Beginner", "Intermediate", "Advanced", "Expert"]
+                    }
+                ]
+            },
+            // Additional field definitions would go here
+        };
+
+        // General questions for all fields
+        const generalQuestions = [
+            {
+                category: "General Skills",
+                question: "Do you have experience working in teams?",
+                type: "yesno"
+            },
+            {
+                category: "Communication Skills",
+                question: "How would you rate your communication skills?",
+                type: "skill",
+                options: ["Beginner", "Intermediate", "Advanced", "Expert"]
+            },
+            {
+                category: "Education",
+                question: "What is your highest level of education?",
+                type: "single",
+                options: [
+                    {text: "No Formal Education", icon: "fas fa-pencil-alt"},
+                    {text: "Primary Education", icon: "fas fa-book"},
+                    {text: "Secondary Education", icon: "fas fa-school"},
+                    {text: "Vocational Training", icon: "fas fa-certificate"},
+                    {text: "Diploma/Degree", icon: "fas fa-university"},
+                    {text: "Postgraduate", icon: "fas fa-graduation-cap"}
+                ]
+            },
+            {
+                category: "Experience",
+                question: "How many years of professional experience do you have?",
+                type: "single",
+                options: [
+                    {text: "None (Just starting)", icon: "fas fa-baby"},
+                    {text: "1-2 years", icon: "fas fa-user"},
+                    {text: "3-5 years", icon: "fas fa-user-tie"},
+                    {text: "5-10 years", icon: "fas fa-user-graduate"},
+                    {text: "10+ years", icon: "fas fa-user-ninja"}
+                ]
+            },
+            {
+                category: "Job Preferences",
+                question: "What type of work environment do you prefer?",
+                type: "single",
+                options: [
+                    {text: "Office", icon: "fas fa-building"},
+                    {text: "Remote", icon: "fas fa-laptop-house"},
+                    {text: "Hybrid", icon: "fas fa-balance-scale"},
+                    {text: "Outdoor", icon: "fas fa-tree"},
+                    {text: "Flexible", icon: "fas fa-random"}
+                ]
+            }
+        ];
+        
+        // Sample job listings for different fields
+        const jobListings = {
+            technology: [
+                {
+                    title: "Frontend Web Developer",
+                    company: "Tech Solutions Inc.",
+                    location: "Accra, Ghana",
+                    description: "We are looking for a skilled Frontend Developer to join our team. You will be responsible for building the client-side of our web applications.",
+                    requirements: "JavaScript, HTML5, CSS3, React.js, 2+ years experience",
+                    salary: "GH₵ 3,500 - 4,500",
+                    contact: {
+                        name: "HR Department",
+                        email: "careers@techsolutions.com",
+                        phone: "+233 24 123 4567",
+                        address: "123 Tech Street, Accra"
+                    }
+                },
+                {
+                    title: "IT Support Specialist",
+                    company: "Ghana Digital Services",
+                    location: "Kumasi, Ghana",
+                    description: "Provide technical assistance to our clients and maintain computer systems, hardware, and software.",
+                    requirements: "IT certification, troubleshooting skills, customer service",
+                    salary: "GH₵ 2,000 - 3,000",
+                    contact: {
+                        name: "Recruitment Team",
+                        email: "jobs@ghanadigital.com",
+                        phone: "+233 50 987 6543",
+                        address: "45 Digital Avenue, Kumasi"
+                    }
+                },
+                {
+                    title: "Python Data Analyst",
+                    company: "Data Insights Ghana",
+                    location: "Accra, Ghana (Remote)",
+                    description: "Analyze large datasets and create visualizations to help businesses make data-driven decisions.",
+                    requirements: "Python, Pandas, SQL, data visualization, 3+ years experience",
+                    salary: "GH₵ 4,000 - 5,500",
+                    contact: {
+                        name: "Data Team Lead",
+                        email: "data.careers@insights.com",
+                        phone: "+233 20 555 1234",
+                        address: "Remote position with occasional meetings in Accra"
+                    }
+                }
+            ],
+            healthcare: [
+                {
+                    title: "Registered Nurse",
+                    company: "Accra Medical Center",
+                    location: "Accra, Ghana",
+                    description: "Provide patient care, educate patients and the public about various health conditions.",
+                    requirements: "Nursing license, 2+ years experience, compassion",
+                    salary: "GH₵ 2,800 - 3,800",
+                    contact: {
+                        name: "Medical Director",
+                        email: " nursingjobs@accramedical.com",
+                        phone: "+233 24 444 7890",
+                        address: "78 Health Street, Accra"
+                    }
+                },
+                {
+                    title: "Pharmacy Technician",
+                    company: "MediPharm Ghana",
+                    location: "Kumasi, Ghana",
+                    description: "Assist pharmacists in preparing and dispensing medications to patients.",
+                    requirements: "Pharmacy tech certification, attention to detail",
+                    salary: "GH₵ 1,500 - 2,200",
+                    contact: {
+                        name: "Pharmacy Manager",
+                        email: "medipharmhr@gmail.com",
+                        phone: "+233 54 321 9876",
+                        address: "22 Medicine Lane, Kumasi"
+                    }
+                }
+            ],
+            education: [
+                {
+                    title: "Primary School Teacher",
+                    company: "Future Leaders Academy",
+                    location: "Accra, Ghana",
+                    description: "Teach primary school students, develop lesson plans, and assess student progress.",
+                    requirements: "Teaching certificate, patience, creativity",
+                    salary: "GH₵ 2,000 - 3,000",
+                    contact: {
+                        name: "School Principal",
+                        email: "careers@futureleaders.edu.gh",
+                        phone: "+233 26 777 8888",
+                        address: "15 Education Road, Accra"
+                    }
+                },
+                {
+                    title: "Mathematics Tutor",
+                    company: "Excel Learning Center",
+                    location: "Takoradi, Ghana",
+                    description: "Provide one-on-one and group tutoring sessions in mathematics for secondary students.",
+                    requirements: "Math degree or equivalent, teaching experience",
+                    salary: "GH₵ 25 - 40 per hour",
+                    contact: {
+                        name: "Center Director",
+                        email: "excel.tutoring@gmail.com",
+                        phone: "+233 55 123 4567",
+                        address: "67 Knowledge Street, Takoradi"
+                    }
+                }
+            ],
+            business: [
+                {
+                    title: "Marketing Assistant",
+                    company: "Ghana Growth Partners",
+                    location: "Accra, Ghana",
+                    description: "Support marketing campaigns, conduct market research, and assist with social media management.",
+                    requirements: "Marketing knowledge, communication skills, creativity",
+                    salary: "GH₵ 1,800 - 2,500",
+                    contact: {
+                        name: "Marketing Manager",
+                        email: "marketingjobs@ghanagrowth.com",
+                        phone: "+233 24 555 6789",
+                        address: "33 Business Avenue, Accra"
+                    }
+                },
+                {
+                    title: "Accountant",
+                    company: "Finance Solutions Ghana",
+                    location: "Kumasi, Ghana",
+                    description: "Manage financial records, prepare taxes, and provide financial advice to clients.",
+                    requirements: "Accounting degree, CPA preferred, 3+ years experience",
+                    salary: "GH₵ 3,000 - 4,500",
+                    contact: {
+                        name: "Finance Director",
+                        email: "accounting@financesolutionsgh.com",
+                        phone: "+233 50 222 3333",
+                        address: "89 Finance Street, Kumasi"
+                    }
+                }
+            ]
+        };
+        
+        // DOM Elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const fieldScreen = document.getElementById('fieldScreen');
+        const questionScreen = document.getElementById('questionScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const questionCategory = document.getElementById('questionCategory');
+        const questionText = document.getElementById('questionText');
+        const questionCount = document.getElementById('questionCount');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const progressBar = document.getElementById('progressBar');
+        const jobResults = document.getElementById('jobResults');
+        const userProfile = document.getElementById('userProfile');
+        const skillSuggestions = document.getElementById('skillSuggestions');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const backToWelcomeBtn = document.getElementById('backToWelcomeBtn');
+        const backToFieldBtn = document.getElementById('backToFieldBtn');
+        const fieldOptions = document.querySelectorAll('.field-option');
+        
+        // User responses and state management
+        let userResponses = {};
+        let currentField = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let questionStack = [];
+        
+        // Start the questionnaire
+        startBtn.addEventListener('click', () => {
+            welcomeScreen.style.display = 'none';
+            fieldScreen.style.display = 'block';
+        });
+        
+        backToWelcomeBtn.addEventListener('click', () => {
+            fieldScreen.style.display = 'none';
+            welcomeScreen.style.display = 'block';
+        });
+        
+        backToFieldBtn.addEventListener('click', () => {
+            questionScreen.style.display = 'none';
+            fieldScreen.style.display = 'block';
+        });
+        
+        restartBtn.addEventListener('click', () => {
+            resultsScreen.style.display = 'none';
+            welcomeScreen.style.display = 'block';
+        });
+        
+        // Add event listeners to field options
+        fieldOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                currentField = option.getAttribute('data-field');
+                startFieldAssessment(currentField);
+            });
+        });
+        
+        function startFieldAssessment(field) {
+            userResponses = {field: fields[field]?.name || field};
+            currentQuestionIndex = 0;
+            questionStack = [];
+            
+            // Combine general questions with field-specific questions
+            currentQuestions = [...generalQuestions];
+            if (fields[field] && fields[field].questions) {
+                currentQuestions = [...currentQuestions, ...fields[field].questions];
+            }
+            
+            fieldScreen.style.display = 'none';
+            questionScreen.style.display = 'block';
+            
+            // Initialize with first question
+            showQuestion(currentQuestions[0]);
+        }
+        
+        function showQuestion(question) {
+            questionCategory.textContent = question.category;
+            questionText.textContent = question.question;
+            
+            // Update progress bar
+            const totalQuestions = currentQuestions.length + countFollowUps(currentQuestions);
+            const answeredQuestions = Object.keys(userResponses).length - 1; // Subtract 1 for the field
+            progressBar.style.width = `${(answeredQuestions / totalQuestions) * 100}%`;
+            
+            questionCount.textContent = `Question ${answeredQuestions + 1} of ${totalQuestions}`;
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Add appropriate options based on question type
+            if (question.type === 'yesno') {
+                const yesNoDiv = document.createElement('div');
+                yesNoDiv.className = 'yes-no-options';
+                
+                const yesBtn = document.createElement('button');
+                yesBtn.innerHTML = '<i class="fas fa-check"></i> Yes';
+                yesBtn.classList.add('yes-no-btn', 'yes-btn');
+                yesBtn.addEventListener('click', () => {
+                    userResponses[question.question] = 'Yes';
+                    handleYesNoResponse(question, true);
+                });
+                
+                const noBtn = document.createElement('button');
+                noBtn.innerHTML = '<i class="fas fa-times"></i> No';
+                noBtn.classList.add('yes-no-btn', 'no-btn');
+                noBtn.addEventListener('click', () => {
+                    userResponses[question.question] = 'No';
+                    handleYesNoResponse(question, false);
+                });
+                
+                yesNoDiv.appendChild(yesBtn);
+                yesNoDiv.appendChild(noBtn);
+                optionsContainer.appendChild(yesNoDiv);
+            } 
+            else if (question.type === 'single') {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                question.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = `<i class="${option.icon}"></i> ${option.text}`;
+                    button.classList.add('option-btn');
+                    button.addEventListener('click', () => {
+                        userResponses[question.question] = option.text;
+                        nextQuestion();
+                    });
+                    optionsDiv.appendChild(button);
+                });
+                
+                optionsContainer.appendChild(optionsDiv);
+            }
+            else if (question.type === 'multi') {
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                let selectedOptions = [];
+                
+                question.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = `<i class="${option.icon}"></i> ${option.text}`;
+                    button.classList.add('option-btn');
+                    button.addEventListener('click', () => {
+                        // Toggle selection
+                        if (selectedOptions.includes(option.text)) {
+                            selectedOptions = selectedOptions.filter(item => item !== option.text);
+                            button.style.background = '#f0f4ff';
+                            button.style.color = '#4b6cb7';
+                        } else {
+                            selectedOptions.push(option.text);
+                            button.style.background = '#4b6cb7';
+                            button.style.color = 'white';
+                        }
+                    });
+                    optionsDiv.appendChild(button);
+                });
+                
+                // Add submit button for multi-select questions
+                const submitBtn = document.createElement('button');
+                submitBtn.textContent = 'Submit Selections';
+                submitBtn.classList.add('btn');
+                submitBtn.style.marginTop = '20px';
+                submitBtn.addEventListener('click', () => {
+                    if (selectedOptions.length > 0) {
+                        userResponses[question.question] = selectedOptions.join(', ');
+                        nextQuestion();
+                    } else {
+                        alert('Please select at least one option');
+                    }
+                });
+                
+                optionsContainer.appendChild(optionsDiv);
+                optionsContainer.appendChild(submitBtn);
+            }
+            else if (question.type === 'skill') {
+                const skillDiv = document.createElement('div');
+                skillDiv.className = 'skill-level';
+                
+                question.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('skill-btn');
+                    button.addEventListener('click', () => {
+                        // Remove active class from all buttons
+                        document.querySelectorAll('.skill-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        
+                        // Add active class to clicked button
+                        button.classList.add('active');
+                        
+                        // Set timeout to simulate loading next question
+                        setTimeout(() => {
+                            userResponses[question.question] = option;
+                            nextQuestion();
+                        }, 500);
+                    });
+                    skillDiv.appendChild(button);
+                });
+                
+                optionsContainer.appendChild(skillDiv);
+            }
+        }
+        
+        function handleYesNoResponse(question, isYes) {
+            // Push next question to stack
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                questionStack.push(currentQuestionIndex + 1);
+            }
+            
+            // Check if there are follow-up questions
+            if (question.followUp && ((isYes && question.followUp.yes) || (!isYes && question.followUp.no))) {
+                const followUps = isYes ? question.followUp.yes : question.followUp.no;
+                
+                // Add follow-up questions to the stack in reverse order
+                for (let i = followUps.length - 1; i >= 0; i--) {
+                    questionStack.push(followUps[i]);
+                }
+            }
+            
+            nextQuestion();
+        }
+        
+        function nextQuestion() {
+            // Check if there are questions in the stack
+            if (questionStack.length > 0) {
+                const nextQIndex = questionStack.pop();
+                
+                // Check if it's a direct index or a question object
+                if (typeof nextQIndex === 'number') {
+                    showQuestion(currentQuestions[nextQIndex]);
+                    currentQuestionIndex = nextQIndex;
+                } else {
+                    // It's a follow-up question object
+                    showQuestion(nextQIndex);
+                }
+            } 
+            else if (currentQuestionIndex < currentQuestions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestions[currentQuestionIndex]);
+            }
+            else {
+                // All questions answered, show results
+                showLoading();
+                setTimeout(showResults, 2000); // Simulate analysis time
+            }
+        }
+        
+        function countFollowUps(questions) {
+            let count = 0;
+            questions.forEach(q => {
+                if (q.followUp) {
+                    if (q.followUp.yes) count += q.followUp.yes.length;
+                    if (q.followUp.no) count += q.followUp.no.length;
+                }
+            });
+            return count;
+        }
+        
+        function showLoading() {
+            questionScreen.style.display = 'none';
+            loadingIndicator.style.display = 'block';
+        }
+        
+        function showResults() {
+            loadingIndicator.style.display = 'none';
+            resultsScreen.style.display = 'block';
+            
+            // Display user profile
+            let profileHTML = `<h4><i class="fas fa-user-circle"></i> Your Skills Profile</h4><div class="profile-details">`;
+            profileHTML += `<div class="profile-detail"><i class="fas fa-industry"></i> Field: ${userResponses.field}</div>`;
+            
+            for (const [question, answer] of Object.entries(userResponses)) {
+                if (question !== 'field') {
+                    profileHTML += `<div class="profile-detail"><i class="fas fa-check-circle"></i> ${question}: ${answer}</div>`;
+                }
+            }
+            
+            profileHTML += `</div>`;
+            userProfile.innerHTML = profileHTML;
+            
+            // Display job results based on field
+            displayJobResults(currentField);
+            
+            // Display skill suggestions
+            skillSuggestions.innerHTML = `
+                <h4><i class="fas fa-lightbulb"></i> Recommended Skills Development</h4>
+                <p>Based on your profile, we recommend developing these skills to improve your employability:</p>
+                <div class="skill-list">
+                    ${getSkillSuggestions(userResponses).map(skill => `
+                        <div class="skill"><i class="fas fa-check-circle"></i> ${skill}</div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Create confetti effect
+            createConfetti();
+        }
+        
+        function displayJobResults(field) {
+            let jobsHTML = '';
+            const jobs = jobListings[field] || [];
+            
+            if (jobs.length === 0) {
+                jobsHTML = `
+                    <div class="job-card">
+                        <h4><i class="fas fa-briefcase"></i> Job Opportunities</h4>
+                        <p><i class="fas fa-info-circle"></i> We're currently gathering job listings for the ${field} field. Please check back soon for opportunities.</p>
+                        <p>In the meantime, we recommend:</p>
+                        <ul>
+                            <li>Networking with professionals in your field</li>
+                            <li>Checking local job boards and company websites</li>
+                            <li>Developing the skills mentioned below</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                jobs.forEach(job => {
+                    jobsHTML += `
+                        <div class="job-card">
+                            <h4><i class="fas fa-briefcase"></i> ${job.title}</h4>
+                            <p><i class="fas fa-building"></i> <strong>Company:</strong> ${job.company}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> ${job.location}</p>
+                            <p><i class="fas fa-tasks"></i> <strong>Description:</strong> ${job.description}</p>
+                            <p><i class="fas fa-graduation-cap"></i> <strong>Requirements:</strong> ${job.requirements}</p>
+                            <div class="salary-tag">${job.salary}</div>
+                            
+                            <div class="contact-info">
+                                <h5><i class="fas fa-address-card"></i> Contact Information</h5>
+                                <div class="contact-detail">
+                                    <i class="fas fa-user"></i>
+                                    <span>${job.contact.name}</span>
+                                </div>
+                                <div class="contact-detail">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>${job.contact.email}</span>
+                                </div>
+                                <div class="contact-detail">
+                                    <i class="fas fa-phone"></i>
+                                    <span>${job.contact.phone}</span>
+                                </div>
+                                <div class="contact-detail">
+                                    <i class="fas fa-map"></i>
+                                    <span>${job.contact.address}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            jobResults.innerHTML = jobsHTML;
+        }
+        
+        function getSkillSuggestions(responses) {
+            const skills = [];
+            
+            if (responses.field.includes("Technology")) {
+                skills.push("Cloud computing", "Cybersecurity basics", "Agile methodologies");
+            } else if (responses.field.includes("Healthcare")) {
+                skills.push("Patient communication", "Medical terminology", "Emergency response");
+            } else if (responses.field.includes("Education")) {
+                skills.push("Curriculum development", "Classroom management", "Educational technology");
+            }
+            
+            skills.push("Communication", "Problem-solving", "Time management");
+            
+            return skills.slice(0, 4);
+        }
+        
+        function createConfetti() {
+            const colors = ['#4b6cb7', '#182848', '#ff8a65', '#d84315', '#66bb6a', '#26a69a'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                confetti.style.opacity = '0.7';
+                confetti.style.position = 'fixed';
+                confetti.style.top = '-20px';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                
+                document.body.appendChild(confetti);
+                
+                // Animate confetti
+                const animation = confetti.animate([
+                    { top: '-20px', transform: 'rotate(0deg)' },
+                    { top: Math.random() * 100 + 50 + 'vh', transform: 'rotate(' + (Math.random() * 360) + 'deg)' }
+                ], {
+                    duration: Math.random() * 3000 + 2000,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                });
+                
+                // Remove confetti after animation completes
+                animation.onfinish = () => {
+                    confetti.remove();
+                };
+            }
+        }
+        
+        // Initialize
+        welcomeScreen.style.display = 'block';
+        fieldScreen.style.display = 'none';
+        questionScreen.style.display = 'none';
+        resultsScreen.style.display = 'none';
+        loadingIndicator.style.display = 'none';
+    </script>
+</body>
+</html>

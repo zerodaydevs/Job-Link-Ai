@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobLink AI - Find Your Perfect Job</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .welcome-screen, .question-screen, .results-screen {
+            text-align: center;
+        }
+        
+        .welcome-screen h2 {
+            color: #4b6cb7;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .welcome-screen p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4b6cb7;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: #3a5999;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-screen {
+            display: none;
+        }
+        
+        .question-screen h3 {
+            color: #4b6cb7;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        .option-btn {
+            background: #f0f4ff;
+            color: #4b6cb7;
+            border: 2px solid #dbe1f0;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+        
+        .option-btn:hover {
+            background: #4b6cb7;
+            color: white;
+            border-color: #4b6cb7;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .results-screen {
+            display: none;
+        }
+        
+        .results-screen h3 {
+            color: #4b6cb7;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .job-results {
+            text-align: left;
+            margin-top: 25px;
+        }
+        
+        .job-card {
+            background: #f9fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #4b6cb7;
+        }
+        
+        .job-card h4 {
+            color: #182848;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .job-card p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .job-card a {
+            display: inline-block;
+            margin-top: 12px;
+            color: #4b6cb7;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .job-card a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4b6cb7;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .options {
+                flex-direction: column;
+            }
+            
+            .option-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JobLink AI</h1>
+            <p>Bridging Skilled and Unskilled Labor with Real-Time Job Opportunities</p>
+        </header>
+        
+        <div class="content">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <h2>Find Your Perfect Job Match</h2>
+                <p>Answer a few questions about your skills, preferences, and location, and our AI will find real-time job opportunities tailored just for you.</p>
+                <button class="btn" id="startBtn">Get Started</button>
+            </div>
+            
+            <!-- Question Screen -->
+            <div class="question-screen" id="questionScreen">
+                <h3 id="questionText">What type of work are you looking for?</h3>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+                
+                <div class="options" id="optionsContainer">
+                    <!-- Options will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Searching for the best job matches...</p>
+            </div>
+            
+            <!-- Results Screen -->
+            <div class="results-screen" id="resultsScreen">
+                <h3>Job Matches for You</h3>
+                <p>Based on your preferences, we've found these opportunities:</p>
+                
+                <div class="job-results" id="jobResults">
+                    <!-- Job results will be inserted here by JavaScript -->
+                </div>
+                
+                <button class="btn" id="restartBtn">Start Again</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>JobLink AI Prototype | IPMC AI Hackathon 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Questions for the user
+        const questions = [
+            {
+                question: "What type of work are you looking for?",
+                options: ["Skilled Professional", "Artisan/Craftsman", "Casual Labor", "Day Labor", "Entry-Level Office", "Remote Work"]
+            },
+            {
+                question: "What is your location?",
+                options: ["Accra", "Kumasi", "Takoradi", "Tamale", "Cape Coast", "Other"]
+            },
+            {
+                question: "What industry are you interested in?",
+                options: ["Construction", "Technology", "Healthcare", "Agriculture", "Hospitality", "Retail", "Education", "Transportation"]
+            },
+            {
+                question: "What is your education level?",
+                options: ["No Formal Education", "Primary Education", "Secondary Education", "Vocational Training", "Diploma/Degree", "Postgraduate"]
+            },
+            {
+                question: "When are you available to start?",
+                options: ["Immediately", "Within a week", "Within 2 weeks", "Within a month", "Flexible"]
+            }
+        ];
+        
+        // DOM Elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const questionScreen = document.getElementById('questionScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const progressBar = document.getElementById('progressBar');
+        const jobResults = document.getElementById('jobResults');
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        // User responses
+        let userResponses = [];
+        let currentQuestion = 0;
+        
+        // Start the questionnaire
+        startBtn.addEventListener('click', startQuestionnaire);
+        restartBtn.addEventListener('click', startQuestionnaire);
+        
+        function startQuestionnaire() {
+            userResponses = [];
+            currentQuestion = 0;
+            welcomeScreen.style.display = 'none';
+            resultsScreen.style.display = 'none';
+            questionScreen.style.display = 'block';
+            loadingIndicator.style.display = 'none';
+            
+            showQuestion(currentQuestion);
+        }
+        
+        function showQuestion(index) {
+            if (index >= questions.length) {
+                // All questions answered, show results
+                showLoading();
+                setTimeout(showResults, 2000); // Simulate search time
+                return;
+            }
+            
+            const question = questions[index];
+            questionText.textContent = question.question;
+            
+            // Update progress bar
+            progressBar.style.width = `${((index + 1) / questions.length) * 100}%`;
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Add new options
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option-btn');
+                button.addEventListener('click', () => {
+                    userResponses.push(option);
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                });
+                optionsContainer.appendChild(button);
+            });
+        }
+        
+        function showLoading() {
+            questionScreen.style.display = 'none';
+            loadingIndicator.style.display = 'block';
+        }
+        
+        function showResults() {
+            loadingIndicator.style.display = 'none';
+            resultsScreen.style.display = 'block';
+            
+            // Generate a search query based on user responses
+            const query = userResponses.join(' ') + ' jobs in Ghana';
+            
+            // Display the search query (in a real implementation, this would use the Google Search API)
+            jobResults.innerHTML = `
+                <div class="job-card">
+                    <h4>${userResponses[0]} Position</h4>
+                    <p><strong>Industry:</strong> ${userResponses[2]}</p>
+                    <p><strong>Location:</strong> ${userResponses[1]}</p>
+                    <p><strong>Education Level:</strong> ${userResponses[3]}</p>
+                    <p><strong>Availability:</strong> ${userResponses[4]}</p>
+                    <p>We found several matches for your criteria. In a full implementation, this would display real-time job listings from Google Search results.</p>
+                    <a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank">View actual job results on Google</a>
+                </div>
+                <div class="job-card">
+                    <h4>Additional Opportunities</h4>
+                    <p>JobLink AI would also suggest skills development opportunities based on your profile:</p>
+                    <p><strong>Recommended Training:</strong> ${getTrainingSuggestion(userResponses[0], userResponses[2])}</p>
+                    <a href="#">Explore training programs</a>
+                </div>
+            `;
+        }
+        
+        function getTrainingSuggestion(jobType, industry) {
+            const suggestions = {
+                "Skilled Professional": "Advanced certification in your field",
+                "Artisan/Craftsman": "Modern techniques and business management",
+                "Casual Labor": "Safety certifications and equipment operation",
+                "Day Labor": "Basic skills certification program",
+                "Entry-Level Office": "Computer skills and office software training",
+                "Remote Work": "Digital literacy and online collaboration tools"
+            };
+            
+            return suggestions[jobType] || "Basic skills development program";
+        }
+        
+        // Initialize
+        welcomeScreen.style.display = 'block';
+        questionScreen.style.display = 'none';
+        resultsScreen.style.display = 'none';
+        loadingIndicator.style.display = 'none';
+    </script>
+</body>
+</html>
