@@ -718,6 +718,73 @@
             display: inline-block;
             margin-top: 10px;
         }
+
+        /* Login & Upload Screens */
+        .login-screen, .upload-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .auth-container {
+            max-width: 520px;
+            margin: 0 auto;
+            background: #f9fbff;
+            border: 1px solid #e5ebf5;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+
+        .role-select {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 14px 0 18px 0;
+        }
+
+        .role-btn {
+            padding: 10px 16px;
+            border-radius: 24px;
+            border: 2px solid #dbe1f0;
+            background: #fff;
+            color: #4b6cb7;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .role-btn.active {
+            background: #4b6cb7;
+            color: #fff;
+            border-color: #4b6cb7;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #3a4a7a;
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dbe1f0;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .upload-screen .tip {
+            color: #556;
+            font-size: 0.95rem;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -737,10 +804,101 @@
                 </div>
                 <h1>JobLink AI</h1>
                 <p>Real Job Matches with Contact Information</p>
+                <button class="btn" id="logoutBtn" style="position:absolute; top:24px; right:24px; display:none;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </header>
         
         <div class="content">
+            <!-- Login Screen -->
+            <div class="login-screen" id="loginScreen">
+                <div class="auth-container">
+                    <h2 style="color:#4b6cb7; margin-bottom:10px;">Sign in to JobLink AI</h2>
+                    <p style="color:#667; margin-bottom:10px;">Choose your role and enter your credentials</p>
+
+                    <div class="role-select">
+                        <button class="role-btn active" data-role="employee" id="employeeRoleBtn">
+                            <i class="fas fa-user"></i> Employee
+                        </button>
+                        <button class="role-btn" data-role="employer" id="employerRoleBtn">
+                            <i class="fas fa-building"></i> Employer
+                        </button>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" id="email" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password"><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" id="password" placeholder="Your password" required>
+                        </div>
+                        <button class="btn" type="submit" id="loginBtn">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </button>
+                    </form>
+                    <p class="tip">Hint: Use any email/password for this demo</p>
+                </div>
+            </div>
+
+            <!-- Employer Upload Screen -->
+            <div class="upload-screen" id="uploadScreen">
+                <h2 style="color:#4b6cb7;">Post a Job</h2>
+                <p class="tip">Fill in the job details and submit to list your opening</p>
+                <div class="auth-container" style="margin-top:14px;">
+                    <form id="jobUploadForm">
+                        <div class="form-group">
+                            <label for="jobTitle">Job Title</label>
+                            <input type="text" id="jobTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input type="text" id="company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="salary">Salary (optional)</label>
+                            <input type="text" id="salary" placeholder="e.g., GH₵ 3,000 - 4,500">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="requirements">Requirements</label>
+                            <textarea id="requirements" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactName">Contact Name</label>
+                            <input type="text" id="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Contact Email</label>
+                            <input type="email" id="contactEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">Contact Phone</label>
+                            <input type="text" id="contactPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactAddress">Contact Address</label>
+                            <input type="text" id="contactAddress" required>
+                        </div>
+                        <button class="btn" type="submit">
+                            <i class="fas fa-upload"></i> Submit Job
+                        </button>
+                    </form>
+                </div>
+                <div class="job-results" id="uploadedJobsList" style="margin-top:20px;"></div>
+                <button class="back-btn" id="toWelcomeFromUpload" style="margin-top:12px;">
+                    <i class="fas fa-home"></i> Go to Assessment
+                </button>
+            </div>
             <!-- Welcome Screen -->
             <div class="welcome-screen" id="welcomeScreen">
                 <h2>Find Your Perfect Job Match</h2>
@@ -1226,6 +1384,9 @@
         const questionScreen = document.getElementById('questionScreen');
         const resultsScreen = document.getElementById('resultsScreen');
         const loadingIndicator = document.getElementById('loadingIndicator');
+        const loginScreen = document.getElementById('loginScreen');
+        const uploadScreen = document.getElementById('uploadScreen');
+        const logoutBtn = document.getElementById('logoutBtn');
         const questionCategory = document.getElementById('questionCategory');
         const questionText = document.getElementById('questionText');
         const questionCount = document.getElementById('questionCount');
@@ -1239,6 +1400,16 @@
         const backToWelcomeBtn = document.getElementById('backToWelcomeBtn');
         const backToFieldBtn = document.getElementById('backToFieldBtn');
         const fieldOptions = document.querySelectorAll('.field-option');
+
+        // Login Elements
+        const employeeRoleBtn = document.getElementById('employeeRoleBtn');
+        const employerRoleBtn = document.getElementById('employerRoleBtn');
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const jobUploadForm = document.getElementById('jobUploadForm');
+        const uploadedJobsList = document.getElementById('uploadedJobsList');
+        const toWelcomeFromUpload = document.getElementById('toWelcomeFromUpload');
         
         // User responses and state management
         let userResponses = {};
@@ -1246,6 +1417,156 @@
         let currentQuestions = [];
         let currentQuestionIndex = 0;
         let questionStack = [];
+        let currentUser = null; // {email, role}
+
+        // Auth helpers
+        function setVisible(el, visible) {
+            if (!el) return;
+            el.style.display = visible ? 'block' : 'none';
+        }
+
+        function routeByRole() {
+            if (!currentUser) return;
+            if (currentUser.role === 'employer') {
+                // Show employer upload
+                setVisible(loginScreen, false);
+                setVisible(welcomeScreen, false);
+                setVisible(fieldScreen, false);
+                setVisible(questionScreen, false);
+                setVisible(resultsScreen, false);
+                setVisible(loadingIndicator, false);
+                setVisible(uploadScreen, true);
+                logoutBtn.style.display = 'inline-block';
+                renderUploadedJobs();
+            } else {
+                // Employee: go to assessment welcome
+                setVisible(uploadScreen, false);
+                setVisible(loginScreen, false);
+                setVisible(resultsScreen, false);
+                setVisible(fieldScreen, false);
+                setVisible(questionScreen, false);
+                setVisible(loadingIndicator, false);
+                setVisible(welcomeScreen, true);
+                logoutBtn.style.display = 'inline-block';
+            }
+        }
+
+        function checkLoginStatus() {
+            const saved = localStorage.getItem('currentUser');
+            if (saved) {
+                try { currentUser = JSON.parse(saved); } catch { currentUser = null; }
+            }
+            if (currentUser) {
+                routeByRole();
+            } else {
+                // Show login by default
+                setVisible(loginScreen, true);
+                setVisible(welcomeScreen, false);
+                setVisible(fieldScreen, false);
+                setVisible(questionScreen, false);
+                setVisible(resultsScreen, false);
+                setVisible(loadingIndicator, false);
+                setVisible(uploadScreen, false);
+                logoutBtn.style.display = 'none';
+            }
+        }
+
+        // Role toggle
+        employeeRoleBtn.addEventListener('click', () => {
+            employeeRoleBtn.classList.add('active');
+            employerRoleBtn.classList.remove('active');
+        });
+
+        employerRoleBtn.addEventListener('click', () => {
+            employerRoleBtn.classList.add('active');
+            employeeRoleBtn.classList.remove('active');
+        });
+
+        // Login submit (demo: accept any credentials)
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const role = employerRoleBtn.classList.contains('active') ? 'employer' : 'employee';
+            currentUser = { email: emailInput.value.trim(), role };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            routeByRole();
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            // Reset assessment state
+            userResponses = {};
+            currentField = null;
+            currentQuestions = [];
+            currentQuestionIndex = 0;
+            questionStack = [];
+            checkLoginStatus();
+        });
+
+        // Employer job upload handling
+        function getUploadedJobs() {
+            try { return JSON.parse(localStorage.getItem('uploadedJobs') || '[]'); } catch { return []; }
+        }
+
+        function saveUploadedJobs(jobs) {
+            localStorage.setItem('uploadedJobs', JSON.stringify(jobs));
+        }
+
+        function renderUploadedJobs() {
+            const jobs = getUploadedJobs();
+            if (jobs.length === 0) {
+                uploadedJobsList.innerHTML = '<p>No uploaded jobs yet.</p>';
+                return;
+            }
+            uploadedJobsList.innerHTML = jobs.map(job => `
+                <div class="job-card">
+                    <h4><i class="fas fa-briefcase"></i> ${job.title}</h4>
+                    <p><i class="fas fa-building"></i> <strong>Company:</strong> ${job.company}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> ${job.location}</p>
+                    <p><i class="fas fa-tasks"></i> <strong>Description:</strong> ${job.description}</p>
+                    <p><i class="fas fa-graduation-cap"></i> <strong>Requirements:</strong> ${job.requirements}</p>
+                    ${job.salary ? `<div class="salary-tag">${job.salary}</div>` : ''}
+                    <div class="contact-info" style="margin-top:12px;">
+                        <h5><i class="fas fa-address-card"></i> Contact Information</h5>
+                        <div class="contact-detail"><i class="fas fa-user"></i> <span>${job.contact.name}</span></div>
+                        <div class="contact-detail"><i class="fas fa-envelope"></i> <span>${job.contact.email}</span></div>
+                        <div class="contact-detail"><i class="fas fa-phone"></i> <span>${job.contact.phone}</span></div>
+                        <div class="contact-detail"><i class="fas fa-map"></i> <span>${job.contact.address}</span></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        jobUploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newJob = {
+                title: document.getElementById('jobTitle').value.trim(),
+                company: document.getElementById('company').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                requirements: document.getElementById('requirements').value.trim(),
+                salary: document.getElementById('salary').value.trim(),
+                contact: {
+                    name: document.getElementById('contactName').value.trim(),
+                    email: document.getElementById('contactEmail').value.trim(),
+                    phone: document.getElementById('contactPhone').value.trim(),
+                    address: document.getElementById('contactAddress').value.trim()
+                }
+            };
+            const jobs = getUploadedJobs();
+            jobs.unshift(newJob);
+            saveUploadedJobs(jobs);
+            jobUploadForm.reset();
+            renderUploadedJobs();
+            alert('Job uploaded successfully');
+        });
+
+        // Allow employer to navigate to assessment welcome
+        toWelcomeFromUpload.addEventListener('click', () => {
+            setVisible(uploadScreen, false);
+            setVisible(welcomeScreen, true);
+        });
         
         // Start the questionnaire
         startBtn.addEventListener('click', () => {
@@ -1623,11 +1944,7 @@
         }
         
         // Initialize
-        welcomeScreen.style.display = 'block';
-        fieldScreen.style.display = 'none';
-        questionScreen.style.display = 'none';
-        resultsScreen.style.display = 'none';
-        loadingIndicator.style.display = 'none';
+        checkLoginStatus();
     </script>
 </body>
 </html>
